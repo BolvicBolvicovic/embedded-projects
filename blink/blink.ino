@@ -1,7 +1,9 @@
+#define SERIAL_BAUDRATE	115200
+
 void
 setup()
 {
-	Serial.begin(115200);
+	Serial.begin(SERIAL_BAUDRATE);
 	pinMode(LED_BUILTIN, OUTPUT);
 	Serial.println("Setup DONE");
 }
