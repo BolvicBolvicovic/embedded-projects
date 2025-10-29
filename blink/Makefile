@@ -1,3 +1,3 @@
-NODEMCU_MK = $(HOME)/arduino-projects/nodemcu.mk
+NODEMCU_MK = $(HOME)/embedded-projects/nodemcu.mk
 
 include $(NODEMCU_MK)
