@@ -3,6 +3,8 @@
 // where D is the distance, T is the time between the Emission and Reception, and C is the sonic speed.
 // (The value is multiplied by 1/2 because T is the time for go-and-return distance.)
 
+#include "../"
+
 #define SERIAL_BAUDRATE	115200
 #define TRIGGER_PIN		D5
 #define ECHO_PIN		D6
@@ -10,8 +12,8 @@
 #define TC				0.034
 #define CALC_DIST(d)	(d * TC / 2)
 
-long	duration;
-int		distance;
+u32	duration;
+u32	distance;
 
 void
 setup()

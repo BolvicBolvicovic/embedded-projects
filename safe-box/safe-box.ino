@@ -1,4 +1,5 @@
 #include <Encoder.h>
+#include "../stddef32.h"
 
 #define SERIAL_BAUDRATE	115200
 
@@ -11,9 +12,9 @@
 Encoder	dial(D7, D6);
 
 // TODO: Upgrade hard coded into decidable code
-int		code[CODE_LENGTH]	= { 2, 4, 6 };
-int		step_idx			= 0;
-long	position			= 0;
+i32	code[CODE_LENGTH]	= { 2, 4, 6 };
+i32	step_idx			= 0;
+i32	position			= 0;
 
 void
 setup()
@@ -29,7 +30,7 @@ setup()
 void
 loop()
 {
-	long	new_pos = dial.read() / 4;
+	i32	new_pos = dial.read() / 4;
 
 	if (new_pos != position)
 	{
