@@ -1,3 +1,4 @@
+ROOT_DIR		= ~/embedded-projects
 BUILD_DIR		= ./build
 SRC_DIR			= .
 FQBN			= esp8266:esp8266:nodemcuv2
@@ -28,7 +29,12 @@ ctags:
 	@rm -f tags.cpp tags.ino tags.core
 
 compile:
-	arduino-cli compile --fqbn $(FQBN) --build-path $(BUILD_DIR) $(SRC_DIR)
+	cp $(ROOT_DIR)/stddef32.h $(SRC_DIR) && \
+	arduino-cli compile \
+		--fqbn $(FQBN) \
+		--build-path $(BUILD_DIR) $(SRC_DIR) \
+		--build-property "compiler.cpp.extra_flags=-O2 -I$(SRC_DIR)" && \
+	rm $(SRC_DIR)/stddef32.h
 
 upload:
 	arduino-cli upload --fqbn $(FQBN) --input-dir $(BUILD_DIR) $(SRC_DIR)
