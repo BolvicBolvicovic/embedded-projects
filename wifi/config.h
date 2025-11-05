@@ -2,12 +2,15 @@
 #define WIFI_H
 
 #include <ESP8266WiFi.h>
+#include <DNSServer.h>
+#include <ESP8266WebServer.h>
+#include <WiFiManager.h> // https://github.com/tzapu/WiFiManager
 #include "stddef32.h"
 
+#ifndef LED_BUILTIN
+#define LED_BUILTIN 2 // Definiera om den inte finns
+#endif
 #define SERIAL_BAUDRATE	115200
-
-#define SSID			("some id")
-#define PASSWORD		("some password")
 
 #define TIMEOUT			2000
 

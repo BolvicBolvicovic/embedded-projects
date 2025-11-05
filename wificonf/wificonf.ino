@@ -1,12 +1,37 @@
-#include "config.h"
-
-WiFiServer	server(80);
-String		led_state		= "off";
-String		header			= "";
-u32			current_time	= 0;
-u32			last_activity	= 0;
-i8			c;
-
+/*
+* WiFiManager Exempelkod för NodeMCU (ESP8266)
+*
+* 1. Laddar upp koden.
+* 2. Öppna Seriell monitor (115200 baud).
+* 3. Enheten startar. Om den inte har några sparade
+* uppgifter startar den ett Wi-Fi-nätverk
+* (Access Point) som heter "ESP8266-Config".
+* 4. Anslut till "ESP8266-Config" med din telefon/dator.
+* 5. En "captive portal" (inloggningssida) bör dyka upp
+* automatiskt. Om inte, öppna en webbläsare och
+* gå till http://192.168.4.1
+* 6. Klicka på "Configure WiFi".
+* 7. Välj ditt vanliga hemma-nätverk och ange lösenordet.
+* 8. Klicka på "Save".
+* 9. Enheten sparar, startar om och ansluter nu till
+* ditt vanliga Wi-Fi.
+*/
+ 
+#include <ESP8266WiFi.h>
+#include <DNSServer.h>
+#include <ESP8266WebServer.h>
+#include <WiFiManager.h> // https://github.com/tzapu/WiFiManager
+ 
+// Vi behöver en pinne för att blinka och visa att allt körs.
+// På NodeMCU är LED_BUILTIN (GPIO 2) "omvänd" (LOW tänder den).
+// På andra kort (som WEMOS D1) är den GPIO 2 (D4) och
+// tänds med HIGH. Vi använder LED_BUILTIN för standard.
+#ifndef LED_BUILTIN
+#define LED_BUILTIN 2 // Definiera om den inte finns
+#endif
+#define SERIAL_BAUDRATE	115200
+ 
+// Funktion som anropas när konfigurationsportalen startar
 void
 configModeCallback (WiFiManager *myWiFiManager)
 {
@@ -25,7 +50,7 @@ configModeCallback (WiFiManager *myWiFiManager)
     delay(50);
   }
 }
-
+ 
 void
 setup()
 {
@@ -70,64 +95,18 @@ setup()
 	
 	// Släck lysdioden för att visa att vi är anslutna och klara.
 	// (På NodeMCU tänds den istället, eftersom den är omvänd)
-	digitalWrite(LED_BUILTIN, HIGH);
-	server.begin();
+	digitalWrite(LED_BUILTIN, LOW);
 }
-
+ 
 void
 loop()
 {
-	WiFiClient	client = server.accept();
-
-	if (client)
-	{
-		header			= "";
-		current_time	= millis();
-		last_activity	= current_time;
-
-		while (client.connected() && current_time - last_activity <= TIMEOUT)
-		{
-			if (client.available())
-			{
-				c				= client.read();
-				last_activity	= current_time;
-				current_time	= millis();
-				header			+= c;
-
-				if (c == '\n')
-				{
-					if (header.endsWith("\r\n\r\n"))
-					{
-						Serial.println("Full header:");
-						Serial.println(header);
-						if (header.indexOf("GET /on") >= 0)
-						{
-							digitalWrite(LED_BUILTIN, LOW);
-							led_state = "on";
-						}
-						else if (header.indexOf("GET /off") >= 0)
-						{
-							digitalWrite(LED_BUILTIN, HIGH);
-							led_state = "off";
-						}
-
-						if (led_state == "off")
-						{
-							client.print(off_response);
-						}
-						else
-						{
-							client.print(on_response);
-						}
-
-						Serial.println("Response sent");
-						break;
-					}
-				}
-			}
-		}
-
-		client.stop();
-		Serial.println("Client Disconnected");
-	}
+  // Din vanliga kod kommer här.
+  // Denna körs bara efter att Wi-Fi är anslutet.
+ 
+  // Exempel: Blinka långsamt för att visa att allt fungerar.
+  digitalWrite(LED_BUILTIN, LOW); // Tänd
+  delay(1000);
+  digitalWrite(LED_BUILTIN, HIGH); // Släck
+  delay(1000);
 }
