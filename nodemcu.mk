@@ -14,6 +14,9 @@ ESP8266_CORE	= $(HOME)/.arduino15/packages/esp8266/hardware/esp8266/3.1.2
 
 all: compile upload serial
 
+erase-flash:
+	esptool --port $(SERIAL) erase-flash
+
 attach:
 	arduino-cli board attach -p $(SERIAL) --fqbn $(FQBN)
 
